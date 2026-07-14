@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#E30613">
+  <title>Benaion Parceiro - Gestão Total</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    .hidden { display: none !important; }
+    .badge-status { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+    .status-open { background: #e8f5e9; color: #2ecc71; border: 1px solid #2ecc71; }
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 15px; }
+    .product-card { background: white; border-radius: 12px; padding: 12px; border: 1px solid #eee; text-align: center; }
+    .pedido-card { border-left: 5px solid #ccc; margin-bottom: 15px; padding: 15px; background: white; border-radius: 10px; }
+    .tab-section { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .taxa-preview { background: #f8f9fa; padding: 15px; border-radius: 12px; margin: 15px 0; text-align: center; border: 2px dashed #E30613; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-top">
+        <div class="logo">
+          <div class="logo-icon">
+            <img src="https://i.postimg.cc/T2Vt53JP/Vermelho-delivery-logo-20260227-011329-0005.png" alt="Logo Benaion">
+          </div>
+          <div class="logo-text">
+            <h1 id="lojaNome">Carregando...</h1>
+            <p id="lojaStatus"><span class="badge-status status-open" id="statusBadge">LOJA ABERTA</span></p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="header-btn" onclick="window.Utils.showToast('Em breve', 'info')"><i class="fas fa-clock"></i></button>
+          <button class="header-btn" onclick="window.Auth.logout()"><i class="fas fa-power-off"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <section id="aba-pedidos" class="tab-section">
+        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;">
+          <div class="card" style="text-align: center; padding: 10px;">
+            <div id="vendasHoje" style="font-size: 20px; font-weight: bold; color: #E30613;">0</div>
+            <div style="font-size: 10px; color: #666;">Hoje</div>
+          </div>
+          <div class="card" style="text-align: center; padding: 10px;">
+            <div id="faturamentoHoje" style="font-size: 14px; font-weight: bold;">R$ 0,00</div>
+            <div style="font-size: 10px; color: #666;">Vendas R$</div>
+          </div>
+          <div class="card" style="text-align: center; padding: 10px;">
+            <div id="pedidosAtivos" style="font-size: 20px; font-weight: bold; color: #2ecc71;">0</div>
+            <div style="font-size: 10px; color: #666;">No Radar</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="window.abrirModalChamar()" 
+                style="width: 100%; margin-bottom: 20px; background: #27ae60; border: none; height: 55px; font-weight: 800; border-radius: 15px;">
+          <i class="fas fa-motorcycle"></i> CHAMAR ENTREGADOR AGORA
+        </button>
+
+        <div id="listaPedidos"></div>
+      </section>
+
+      <section id="aba-produtos" class="tab-section hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+          <h3 style="margin:0;">Meu Catálogo</h3>
+          <button class="btn btn-small btn-primary" onclick="document.getElementById('modalProduto').classList.remove('hidden')">
+            <i class="fas fa-plus"></i> Novo Item
+          </button>
+        </div>
+        <div class="product-grid" id="gridProdutos"></div>
+      </section>
+
+      <section id="aba-perfil" class="tab-section hidden">
+        <div class="card">
+          <h3>Configurações da Loja</h3>
+          <hr>
+          <div class="form-group" style="margin-top:15px;">
+            <label>Sua Taxa de Comissão</label>
+            <input type="text" class="form-control" value="Acordado em contrato" readonly>
+          </div>
+          <button class="btn btn-outline" style="width: 100%; color: red; border-color: red;" onclick="window.Auth.logout()">Encerrar Sessão</button>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" id="nav-pedidos" onclick="window.switchTab('pedidos')"><i class="fas fa-receipt"></i><span>Pedidos</span></button>
+      <button class="nav-item" id="nav-produtos" onclick="window.switchTab('produtos')"><i class="fas fa-store-alt"></i><span>Produtos</span></button>
+      <button class="nav-item" id="nav-perfil" onclick="window.switchTab('perfil')"><i class="fas fa-cog"></i><span>Ajustes</span></button>
+    </nav>
+  </div>
+
+  <!-- Modal Chamar Motoboy -->
+  <div class="modal hidden" id="modalChamar">
+    <div class="modal-content">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <h3 style="margin:0;">Solicitar Motoboy</h3>
+        <button onclick="window.fecharModalChamar()" style="border:none; background:none; font-size:24px;">&times;</button>
+      </div>
+      <form id="formChamarAvulso">
+        <div class="form-group">
+          <label>Onde retirar? (Origem)</label>
+          <select id="bairroOrigem" class="form-control" onchange="window.calcularTaxaChamada()" required></select>
+        </div>
+        <div class="form-group">
+          <label>Onde entregar? (Destino)</label>
+          <select id="bairroDestino" class="form-control" onchange="window.calcularTaxaChamada()" required></select>
+        </div>
+        <div class="form-group">
+          <label>Valor dos Produtos (Opcional)</label>
+          <input type="number" step="0.01" id="valorProdutosAvulso" class="form-control" placeholder="R$ 0,00">
+        </div>
+        <div class="taxa-preview">
+          <span style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 1px;">Taxa de Entrega</span><br>
+          <b id="valorTaxaChamada" style="font-size: 26px; color: #E30613;">R$ 0,00</b>
+        </div>
+        <button type="submit" id="btnLancarPedido" class="btn btn-primary" style="width:100%; height:55px; border-radius: 12px; font-weight: bold;">LANÇAR NO RADAR</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Produto -->
+  <div class="modal hidden" id="modalProduto">
+    <div class="modal-content">
+      <h3>Adicionar ao Cardápio</h3>
+      <form id="formAddProduto">
+        <input type="text" id="pNome" class="form-control" placeholder="Nome do Produto" required style="margin-bottom:10px;">
+        <input type="number" step="0.01" id="pPreco" class="form-control" placeholder="Preço de Venda R$" required style="margin-bottom:10px;">
+        <button type="submit" class="btn btn-primary" style="width:100%;">Cadastrar Produto</button>
+        <button type="button" class="btn btn-outline" style="width:100%; margin-top:10px;" onclick="document.getElementById('modalProduto').classList.add('hidden')">Voltar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script type="module" src="js/parceiro.js"></script>
+</body>
+</html>
