@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#E30613">
+  <title>Entregador - BENAION DELIVERY</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+  <style>
+    body { background-color: #f4f7f6; font-family: 'Segoe UI', Roboto, sans-serif; }
+    .hidden { display: none !important; }
+    .status-badge {
+      font-size: 11px; padding: 4px 10px; border-radius: 20px;
+      font-weight: 700; display: flex; align-items: center; gap: 5px;
+    }
+    .stat-box {
+      background: rgba(255,255,255,0.15); padding: 10px; border-radius: 12px; backdrop-filter: blur(5px);
+    }
+    .btn-aceitar {
+      background: #E30613; color: white; width: 100%; margin-top: 10px;
+      border-radius: 10px; padding: 12px; font-weight: 800; border: none; cursor: pointer;
+    }
+    .btn-aceitar:disabled { background: #ccc; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-top">
+        <div class="logo">
+          <div class="logo-icon">
+            <img src="https://i.postimg.cc/T2Vt53JP/Vermelho-delivery-logo-20260227-011329-0005.png" alt="Benaion">
+          </div>
+          <div class="logo-text">
+            <h1 id="entregadorNome" style="font-size: 18px;">Conectando...</h1>
+            <div id="statusIndicator" class="status-badge" style="background: #eee; color: #666;">
+              <i class="fas fa-circle" style="font-size: 8px;"></i> Verificando
+            </div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="header-btn" id="btnStatusHeader" onclick="window.toggleStatus()"><i class="fas fa-power-off"></i></button>
+          <button class="header-btn" onclick="window.Auth.logout()"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="card" style="background: linear-gradient(135deg, #E30613 0%, #90030a 100%); color: white; margin-bottom: 20px; border: none; border-radius: 20px; padding: 20px;">
+        <p style="font-size: 12px; opacity: 0.8; margin-bottom: 15px; font-weight: 600;">RESUMO DE HOJE</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+          <div class="stat-box">
+            <span style="font-size: 11px; display: block; opacity: 0.9;">Ganhos Hoje</span>
+            <b style="font-size: 22px;" id="statSaldo">R$ 0,00</b>
+          </div>
+          <div class="stat-box">
+            <span style="font-size: 11px; display: block; opacity: 0.9;">Entregas Hoje</span>
+            <b style="font-size: 22px;" id="statHoje">0</b>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <button id="btnTabDisp" class="btn btn-primary" style="flex: 1; border-radius: 12px;" onclick="window.mostrarAba('disponiveis')">
+          <i class="fas fa-satellite-dish"></i> RADAR
+        </button>
+        <button id="btnTabMinhas" class="btn btn-outline" style="flex: 1; border-radius: 12px;" onclick="window.mostrarAba('minhas')">
+          <i class="fas fa-route"></i> EM CURSO
+        </button>
+      </div>
+
+      <div id="abaDisponiveis">
+        <div id="listaPedidosDisponiveis">
+          <div class="text-center" style="padding: 50px; opacity: 0.4;">
+            <i class="fas fa-spinner fa-spin fa-2x"></i>
+            <p style="margin-top: 10px;">Sincronizando satélite...</p>
+          </div>
+        </div>
+      </div>
+      
+      <div id="abaMinhas" class="hidden">
+        <div id="listaMinhasEntregas"></div>
+      </div>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="window.mostrarAba('disponiveis')"><i class="fas fa-motorcycle"></i><span>Radar</span></button>
+      <button class="nav-item" onclick="window.Utils.showToast('Histórico em breve', 'info')"><i class="fas fa-list-ul"></i><span>Preços</span></button>
+      <button class="nav-item" onclick="window.toggleStatus()"><i class="fas fa-power-off" id="navIconStatus"></i><span id="navTextStatus">Offline</span></button>
+    </nav>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script type="module" src="js/api.js"></script>
+  <script type="module" src="js/entregador.js"></script>
+</body>
+</html>
