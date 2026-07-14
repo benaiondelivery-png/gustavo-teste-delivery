@@ -1,0 +1,2 @@
+// Sound: Pedido Aceito
+const SOUND_PEDIDO_ACEITO = "data:audio/mpeg;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAA...";
