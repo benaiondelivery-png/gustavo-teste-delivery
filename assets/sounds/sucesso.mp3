@@ -1,0 +1,2 @@
+// Sound: Sucesso
+const SOUND_SUCESSO = "data:audio/mpeg;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAA...";
