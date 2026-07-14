@@ -1,0 +1,5 @@
+// Sound: Novo Pedido (som de notificação)
+// Você pode gerar sons usando: https://www.audiocheck.net/
+// Ou usar este arquivo base64:
+
+const SOUND_NOVO_PEDIDO = "data:audio/mpeg;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAA...";
